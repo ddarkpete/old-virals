@@ -1,0 +1,27 @@
+1.Implementacja 4 gramów
+2.Zaznaczanie tekstów podobnych na stronie
+    - zrobić  checkboxy // done
+    - zaznaczanie wszystkich jednym przyciskiem // done
+    - obsłużyć checkboxy // done
+
+    - paginacja na strnach// chyba dla kazdego osobna
+    - metody paginacji w cassandrze
+
+    https://coderwall.com/p/pkthoa/read-checkbox-in-flask
+3.Storowanie virali gdzieś ( osobna tabela ?) // osobna
+4.Storowanie punktacji virali // w wiralach
+    - trzeba trzymac co zaakceptowane co nie
+    - status virala czy uz byl oglądany i oceniany
+
+5.Podzielenie tekstów na strony // done
+6. osobny page virale
+    - templatka pobrana
+    - zrobić widok we flasku
+    - js i komunikacja z templatką
+    - info o statusie virala
+
+7. wygenerowac jakies virale // ngramy i bag od words
+    - naprawic zeby cassandra nie plakala za byt dlugim responsem
+8. snippety textow ktore mamy 
+    - no idea jak narazie
+

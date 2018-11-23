@@ -1,0 +1,7 @@
+similarCheckboxes.each(function(){
+        similarIDs.push($(this).attr("id"));
+    });
+
+    unsimilarCheckboxes.each(function(){
+        unsimilarIDs.push($(this).attr("id"));
+    });

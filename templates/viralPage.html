@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Page Content -->
+    <div class="container">
+
+      <!-- Page Heading -->
+      <h1 class="my-4">
+        <small></small>
+      </h1>
+      <label for="sel1">Choose method   :    </label>
+      <select title="Choose method" class="selectpicker">
+          <option>Method 1</option>
+          <option>Method 2</option>
+          <option>Method 3</option>
+          <option>Method 4</option>
+      </select>
+      <button type="button" class="btn">Submit</button>
+      <h1 class="my-4">
+          <small></small>
+        </h1>
+      <form action="" method="post">
+      <div class="row">
+        {% for article in articles %}
+        <div class="col-lg-4 col-sm-6 portfolio-item">
+          <div class="card h-100">
+            <div class="card-body">
+              <h4 class="card-title">
+                <a href="http://127.0.0.1:5000/text/{{ article.doc_page_id }}">{{ article.doc_title }}</a>
+              </h4>
+              <p class="card-text">{{ article.page_text }}</p>
+              <p class="card-text">{{ article.doc_date_start }}</p>
+              <input class="form-check-input" type="checkbox" value="" id="{{ article.doc_page_id }}", name="virals">
+              <label class="form-check-label" for="{{ article.doc_page_id }}">
+                Similar text
+              </label>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        
+      </div>
+      <!-- /.row -->
+
+      <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="check-all">
+          <label class="form-check-label" for="check-all">
+            Mark all similar
+          </label>
+          <button type="button" class="btn" id="submit-similar">Submit mark</button>
+      </div>
+
+    </form>
+
+      <!-- Pagination -->
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="#">1</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="#">2</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="#">3</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </a>
+        </li>
+      </ul>
+
+    </div>
+{% endblock %}
