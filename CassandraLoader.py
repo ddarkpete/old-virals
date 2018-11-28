@@ -3,6 +3,7 @@ from cassandra.cluster import Cluster
 
 cluster = Cluster() 
 session = cluster.connect('oldviralskeyspace')
+session.default_timeout = 6000
 
 print(" doc_page_id\tdoc_id\tdoc_title\tpage_no\tpage_text")
 

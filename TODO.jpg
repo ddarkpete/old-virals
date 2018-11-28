@@ -15,10 +15,19 @@
 
 5.Podzielenie tekstów na strony // done
 6. osobny page virale
-    - templatka pobrana
-    - zrobić widok we flasku
-    - js i komunikacja z templatką
-    - info o statusie virala
+    - templatka pobrana// done
+    - zrobić widok we flasku // done
+    - js i komunikacja z templatką //done
+    - info o statusie virala 
+        - jest w bazie
+    - info o zaznaczonych podobnych tekstach
+        - zagniezdzona lista moze byc problemem w kasandrze
+        - osobna tabela ?
+            - jakies id, page 1 id , page 2 id, bool czy podbne
+            + pewna identyfikacja viral page'y
+            - wydajnosc
+            *** ALBO ***
+            - jakies id, id virala, lista booli czy podobne
 
 7. wygenerowac jakies virale // ngramy i bag od words
     - naprawic zeby cassandra nie plakala za byt dlugim responsem

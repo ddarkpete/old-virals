@@ -12,7 +12,7 @@ def str2bool(v):
 
 @app.route('/')
 def mainPage():
-    virals = session.execute('SELECT * from simpages')
+    virals = session.execute('SELECT * from virals')
     return render_template('mainPage.html', virals = virals)
 
 @app.route('/text/<id>')
@@ -38,13 +38,13 @@ def viralPage(vir_id):
         for k, v in simVirals:
             print("{} {}".format(k,v))
         '''
-        return "OK"
+        return 200
     else:
-        viral = session.execute("SELECT * FROM simpages WHERE id = '{}'".format(vir_id))
+        viral = session.execute("SELECT * FROM virals WHERE viral_id = '{}'".format(vir_id))
         #query = "SELECT * FROM documents WHERE doc_page_id IN ('"
         idsInString = ""
         for v in viral:
-            idsInString = str(v.sim)[1:-1]
+            idsInString = str(v.similar_pages)[1:-1]
         rows = session.execute("SELECT * FROM documents WHERE doc_page_id IN ({})".format(idsInString))
         return render_template('viralPage.html', articles = rows)
 
