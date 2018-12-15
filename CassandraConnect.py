@@ -33,6 +33,7 @@ def viralPage(vir_id):
             keyval = pair.split('=')
             simVirals[keyval[0]] = str2bool(keyval[1])
         print(simVirals)
+        session.execute("UPDATE virals SET isSimilar =  ['{}'] WHERE viral_id = '{}'".format(pag2_id, pag1_id))
         '''
         simVirals = request.json()
         for k, v in simVirals:
