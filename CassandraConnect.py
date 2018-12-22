@@ -31,21 +31,21 @@ def viralPage(vir_id):
         simVirals = {}
         for pair in pairs:
             keyval = pair.split('=')
-            simVirals[keyval[0]] = str2bool(keyval[1])
-        print(simVirals)
-        session.execute("UPDATE virals SET isSimilar =  ['{}'] WHERE viral_id = '{}'".format(pag2_id, pag1_id))
-        '''
-        simVirals = request.json()
-        for k, v in simVirals:
-            print("{} {}".format(k,v))
-        '''
-        return 200
+            simVirals[keyval[0]] = keyval[1]
+        for s in simVirals:
+            cql = "UPDATE documents SET issimilar = issimilar + {{'{}' : {}}} WHERE doc_page_id = '{}'".format(vir_id, str(simVirals[s]).lower(), s)
+            session.execute(cql)
+
+        session.execute("UPDATE virals SET status = 'REVIEWED' WHERE viral_id = '{}'".format(vir_id))
+        return "200"
     else:
         viral = session.execute("SELECT * FROM virals WHERE viral_id = '{}'".format(vir_id))
         #query = "SELECT * FROM documents WHERE doc_page_id IN ('"
         idsInString = ""
         for v in viral:
             idsInString = str(v.similar_pages)[1:-1]
+            if v.status == 'NEW':
+                session.execute("UPDATE virals SET status = 'VIEWED' WHERE viral_id = '{}'".format(vir_id))
         rows = session.execute("SELECT * FROM documents WHERE doc_page_id IN ({})".format(idsInString))
         return render_template('viralPage.html', articles = rows)
 

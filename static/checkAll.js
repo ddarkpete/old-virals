@@ -23,8 +23,10 @@ $('#submit-similar').click(function(event) {
     //})
     //serializedSimVirals = JSON.stringify(similarCheckboxes);
 
+    var postURL = window.location.pathname;
+
     $.ajax({
-        url: '/viral',
+        url: postURL,
         type: 'POST',
         data: simVirals,
         succes: function(response) {
