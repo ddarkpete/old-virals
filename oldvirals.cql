@@ -28,6 +28,7 @@ CREATE TABLE oldviralskeyspace.documents (
     doc_date_stop date,
     doc_id int,
     doc_title text,
+    issimilar map<ascii, boolean>,
     page_no int,
     page_text text,
     snippets map<text, text>
@@ -48,11 +49,10 @@ CREATE TABLE oldviralskeyspace.documents (
 
 CREATE TABLE oldviralskeyspace.virals (
     viral_id ascii PRIMARY KEY,
-    issimilar list<boolean>,
     method_name ascii,
     page_id ascii,
     similar_pages list<text>,
-    snippets list<text>,
+    snippet text,
     status ascii
 ) WITH bloom_filter_fp_chance = 0.01
     AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
