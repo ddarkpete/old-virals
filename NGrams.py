@@ -47,9 +47,9 @@ for i in range(0,lenDocIDs - 1):
         page1 = session.execute('SELECT doc_id , doc_page_id , page_text from documents WHERE doc_id = {} ALLOW FILTERING'.format(docIDs[i]))
         page2 = session.execute('SELECT doc_id , doc_page_id , page_text from documents WHERE doc_id = {} ALLOW FILTERING'.format(docIDs[j]))
         for p in page1:
-            page1_4grams = list(ngrams(p.page_text, 20))
+            page1_4grams = list(ngrams(p.page_text, 40))
             for p2 in page2:
-                page2_4grams = list(ngrams(p2.page_text,20))
+                page2_4grams = list(ngrams(p2.page_text,40))
                 jq = jaccard_distance(page1_4grams,page2_4grams)
                 if jq > MIN_JAQ:
                     print('insert')
