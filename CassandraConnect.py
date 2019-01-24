@@ -47,7 +47,8 @@ def viralPage(vir_id):
             if v.status == 'NEW':
                 session.execute("UPDATE virals SET status = 'VIEWED' WHERE viral_id = '{}'".format(vir_id))
         rows = session.execute("SELECT * FROM documents WHERE doc_page_id IN ({})".format(idsInString))
-        return render_template('viralPage.html', articles = rows)
+        print(vir_id)
+        return render_template('viralPage.html', articles = rows, vir_id = vir_id)
 
 
 

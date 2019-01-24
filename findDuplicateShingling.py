@@ -8,6 +8,19 @@ import numpy as np
 from random import randint
 from bisect import bisect_right
 from heapq import heappop, heappush
+from cassandra.cluster import Cluster
+from nltk import ngrams
+import random
+
+cluster = Cluster() 
+session = cluster.connect('oldviralskeyspace')
+session.default_timeout = 6000
+
+METHOD_NAME = "SHINGLING"
+NEW_STATUS = "NEW"
+MIN_JAQ = 0.089
+
+docs = session.execute('SELECT doc_page_id , page_text from documents')
 
 def strToIntHash(text):
     return np.int32(int(hashlib.md5(text.encode('utf-8')).hexdigest()[:8], 16))
@@ -35,6 +48,19 @@ def pickRandomCoefs(k):
         k -= 1
     return randList
 
+def checkIfVirExist(viralID):
+    rows = session.execute("SELECT * FROM virals WHERE viral_id = '{}'".format(viralID))
+    if not rows:
+        return False
+    else:
+        return True
+
+def insertOrUpdateViral(pag1_id, pag2_id):
+    if checkIfVirExist(p.doc_page_id):
+        session.execute("UPDATE virals SET similar_pages = similar_pages + ['{}'] WHERE viral_id = '{}'".format(pag2_id, pag1_id))
+    else:
+        session.execute("INSERT INTO virals (viral_id,page_id, similar_pages, status, method_name)VALUES ('{}','{}',['{}'],'{}','{}')".format(p.doc_page_id, p.doc_page_id, p2.doc_page_id,NEW_STATUS,METHOD_NAME))
+
 
 
 hashNum = 10
@@ -48,6 +74,20 @@ docsIDs = []
 allShingles = 0
 numDocs = 0
 
+for doc in docs:
+    numDocs += 1
+    currDocID = doc.doc_page_id
+    docsIDs.append(currDocID)
+    words = doc.page_text.split(' ')
+    shinglesInDoc = set()
+    for ind in range(0, len(words) - 2):
+        shingle = "{} {} {}".format(words[ind], words[ind + 1], words[ind + 2])
+        shingle = strToIntHash(shingle)
+        shinglesInDoc.add(shingle)
+    
+    docsShingles[currDocID] = shinglesInDoc
+    allShingles = allShingles + (len(words) - 2)
+'''
 with open(fileName, 'r') as file:
     for line in file:
         numDocs += 1
@@ -64,7 +104,7 @@ with open(fileName, 'r') as file:
         
         docsShingles[currDocID] = shinglesInDoc
         allShingles = allShingles + (len(words) - 2)
-
+'''
 print("Average shingle per doc: {}".format(allShingles/numDocs))
 
 #TRIANGLE MATRICE
@@ -118,8 +158,9 @@ for i in range(0, numDocs):
             s1 = docsShingles[docsIDs[i]]
             s2 = docsShingles[docsIDs[j]]
             J = (len(s1.intersection(s2)) / len(s1.union(s2)))
-            
-            print("{} -> {}    {}    {}".format(docsIDs[i], docsIDs[j], estJ , J))
+            if J > MIN_JAQ:
+                print('insert')
+                insertOrUpdateViral(docsIDs[i], docsIDs[j])
         else:
             underThrsh += 1
 

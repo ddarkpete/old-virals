@@ -10,7 +10,7 @@ METHOD_NAME = "4GRAMS"
 NEW_STATUS = "NEW"
 MIN_JAQ = 0.015
 
-docs = session.execute('SELECT doc_id from documents')
+docs = session.execute('SELECT doc_page_id  from documents')
 
 docIDs =[]
 
@@ -34,7 +34,7 @@ def insertOrUpdateViral(pag1_id, pag2_id):
         session.execute("INSERT INTO virals (viral_id,page_id, similar_pages, status, method_name)VALUES ('{}','{}',['{}'],'{}','{}')".format(p.doc_page_id, p.doc_page_id, p2.doc_page_id,NEW_STATUS,METHOD_NAME))
 
 for doc in docs:
-    docIDs.append(doc.doc_id)
+    docIDs.append(doc.doc_page_id)
     #print(doc.doc_id)
 
 docIDs = list(set(docIDs))
@@ -44,12 +44,18 @@ lenDocIDs = len(docIDs)
 print(lenDocIDs)
 for i in range(0,lenDocIDs - 1):
     for j in range( i + 1, lenDocIDs):
-        page1 = session.execute('SELECT doc_id , doc_page_id , page_text from documents WHERE doc_id = {} ALLOW FILTERING'.format(docIDs[i]))
-        page2 = session.execute('SELECT doc_id , doc_page_id , page_text from documents WHERE doc_id = {} ALLOW FILTERING'.format(docIDs[j]))
+        page1query = "SELECT doc_id , doc_page_id , page_text from documents WHERE doc_page_id = '{}'".format(docIDs[i])
+        page2query = "SELECT doc_id , doc_page_id , page_text from documents WHERE doc_page_id = '{}'".format(docIDs[j])
+        page1 = session.execute(page1query)
+        page2 = session.execute(page2query)
         for p in page1:
-            page1_4grams = list(ngrams(p.page_text, 40))
+            page1_4grams = list(ngrams(p.page_text.split(), 4))
             for p2 in page2:
-                page2_4grams = list(ngrams(p2.page_text,40))
+                try:
+                    page2_4grams = list(ngrams(p2.page_text.split(),4))
+                except AttributeError:
+                    print(p2.doc_page_id)
+                    continue
                 jq = jaccard_distance(page1_4grams,page2_4grams)
                 if jq > MIN_JAQ:
                     print('insert')
