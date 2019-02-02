@@ -41,14 +41,16 @@ def viralPage(vir_id):
     else:
         viral = session.execute("SELECT * FROM virals WHERE viral_id = '{}'".format(vir_id))
         #query = "SELECT * FROM documents WHERE doc_page_id IN ('"
+        viralSnippet=""
         idsInString = ""
         for v in viral:
             idsInString = str(v.similar_pages)[1:-1]
+            viralSnippet = v.snippet
             if v.status == 'NEW':
                 session.execute("UPDATE virals SET status = 'VIEWED' WHERE viral_id = '{}'".format(vir_id))
         rows = session.execute("SELECT * FROM documents WHERE doc_page_id IN ({})".format(idsInString))
         print(vir_id)
-        return render_template('viralPage.html', articles = rows, vir_id = vir_id)
+        return render_template('viralPage.html', articles = rows, vir_id = vir_id, viralSnippet=viralSnippet)
 
 
 
