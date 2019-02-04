@@ -2,28 +2,12 @@
 
 {% block content %}
     <!-- Page Content -->
-    <div class="container" style="margin-top : 100px">
+    <div class="container" >
 
-      <!-- Page Heading -->
-      <h1 class="my-4">
-        <small>xd</small>
-      </h1>
       
-      <h1 class="my-4">
-          <small></small>
-        </h1>
-        <!--
-        <div class="col-sm-3 px-1 bg-dark">
-            <div class="py-2 sticky-top flex-grow-1">
-                <div class="nav flex-sm-column">
-                    <p>{{ viralSnippet }}</p>
-                </div>
-            </div>
-        </div>
-        -->
       <form action="" method="post">
       <div class="row">
-        <div class="col-6 order-1" id="sticky-sidebar" style="margin-top : 60px">
+        <div class="col-6 order-1" id="sticky-sidebar" style=";">
             <div class="sticky-top"><!-- style="margin-top : 60px">-->
               <div class="col portfolio-item" style="height:80vh" >
                 <div class="card h-100">
@@ -45,7 +29,7 @@
                 <h4 class="card-title">
                   <a href="/text/{{ article.doc_page_id }}">{{ article.doc_title }}</a>
                 </h4>
-                <p class="card-text">{{ article.snippets[vir_id] }}</p>
+                <p class="card-text snippetText" id = "{{ article.doc_page_id }}" style="height:70vh ; overflow:auto">{{ article.snippets[vir_id] }}</p>
                 <p class="card-text">{{ article.doc_date_start }}</p>
                 <input class="form-check-input" type="checkbox" {% if article.issimilar["{{ vir_id }}"] %} checked {% endif %} " id="{{ article.doc_page_id }}", name="virals">
                 <label class="form-check-label" for="{{ article.doc_page_id }}">
@@ -69,30 +53,7 @@
 
     </form>
 
-      <!-- Pagination -->
-      <ul class="pagination justify-content-center">
-        <li class="page-item">
-          <a class="page-link" href="#" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-            <span class="sr-only">Previous</span>
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#">1</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#">2</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#">3</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-            <span class="sr-only">Next</span>
-          </a>
-        </li>
-      </ul>
+      
 
     </div>
 {% endblock %}

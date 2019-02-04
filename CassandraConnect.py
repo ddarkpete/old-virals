@@ -43,9 +43,11 @@ def viralPage(vir_id):
         #query = "SELECT * FROM documents WHERE doc_page_id IN ('"
         viralSnippet=""
         idsInString = ""
+        virTitle = ""
         for v in viral:
             idsInString = str(v.similar_pages)[1:-1]
             viralSnippet = v.snippet
+            #viral
             if v.status == 'NEW':
                 session.execute("UPDATE virals SET status = 'VIEWED' WHERE viral_id = '{}'".format(vir_id))
         rows = session.execute("SELECT * FROM documents WHERE doc_page_id IN ({})".format(idsInString))

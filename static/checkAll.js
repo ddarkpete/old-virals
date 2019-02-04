@@ -40,3 +40,16 @@ $('#submit-similar').click(function(event) {
 
 
 });
+
+//var mainWords = []
+
+$('#mainText').text(function()  {
+    var mainWords = this;//.split(" ");
+    alert(mainWords)//.join(" "));
+});
+
+
+
+$('.snippetText').each(function () {
+    //alert($('#' + this.id).text());
+});
