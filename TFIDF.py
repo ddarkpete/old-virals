@@ -50,7 +50,6 @@ for i in range(0,lenDocIDs - 1):
 
                 for x in sorted(tfidf_comparisons, reverse = True):
                     print(x)
-                quit()
 
 
 

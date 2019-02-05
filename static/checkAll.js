@@ -1,3 +1,6 @@
+
+
+
 $('#check-all').click(function(event) {   
     if(this.checked) {
         $(':checkbox').each(function() {
@@ -41,15 +44,31 @@ $('#submit-similar').click(function(event) {
 
 });
 
-//var mainWords = []
 
-$('#mainText').text(function()  {
-    var mainWords = this;//.split(" ");
-    alert(mainWords)//.join(" "));
+/*
+var mainWords = []
+
+$(function()  {
+    
+
 });
-
+*/
 
 
 $('.snippetText').each(function () {
-    //alert($('#' + this.id).text());
+    var mainWords = $('#mainText').text().split(" ")
+    spans = []
+    txt = $('#' + this.id).text();
+    words = txt.split(" ");
+    for(var x = 0; x < words.length; x++){
+        if(mainWords.indexOf(words[x]) >= 0){
+            var span = "<span style='background-color: lightgreen;'>" + words[x] + "</span>"
+        } else {
+            var span = "<span>" + words[x] + "</span>"
+        }
+        spans.push(span);
+    }
+
+    $('#' + this.id).html(spans.join(" "));
+
 });
