@@ -27,9 +27,9 @@ def checkIfVirExist(viralID):
     else:
         return True
 
-def insertOrUpdateViral(pag1_id, pag2_id):
+def insertOrUpdateViral(p, p2):
     if checkIfVirExist(p.doc_page_id):
-        session.execute("UPDATE virals SET similar_pages = similar_pages + ['{}'] WHERE viral_id = '{}'".format(pag2_id, pag1_id))
+        session.execute("UPDATE virals SET similar_pages = similar_pages + ['{}'] WHERE viral_id = '{}'".format(p.doc_page_id, p2.doc_page_id))
     else:
         session.execute("INSERT INTO virals (viral_id,page_id, similar_pages, status, method_name)VALUES ('{}','{}',['{}'],'{}','{}')".format(p.doc_page_id, p.doc_page_id, p2.doc_page_id,NEW_STATUS,METHOD_NAME))
 
@@ -59,4 +59,4 @@ for i in range(0,lenDocIDs - 1):
                 jq = jaccard_distance(page1_4grams,page2_4grams)
                 if jq > MIN_JAQ:
                     print('insert')
-                    insertOrUpdateViral(p.doc_page_id, p2.doc_page_id)
+                    insertOrUpdateViral(p, p2)
