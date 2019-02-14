@@ -11,9 +11,23 @@ def str2bool(v):
   return v.lower() == "true"
 
 @app.route('/')
-def mainPage():
-    virals = session.execute('SELECT * from virals')
-    return render_template('mainPage.html', virals = virals)
+def redirToAll():
+    return redirect('/all')
+
+@app.route('/<method>')
+def mainPage(method):
+    if method == 'all' or method == '':
+        virals = session.execute("SELECT * from virals")
+        met = 1
+    elif method == 'ngrams':
+        virals = session.execute("SELECT * from virals where method_name = '4GRAMS' ALLOW FILTERING")
+        met = 2   
+    elif method == 'shingling':
+        virals = session.execute("SELECT * from virals where method_name = 'SHINGLING' ALLOW FILTERING")
+        met = 3
+    else:
+        return redirect('/all')
+    return render_template('mainPage.html', virals = virals, met = met)
 
 @app.route('/text/<id>')
 def text(id):

@@ -21,10 +21,14 @@ NEW_STATUS = "NEW"
 MIN_JAQ = 0.089
 
 docIDs =[]
-docs = session.execute('SELECT doc_page_id from documents')# , page_text from documents')
+docs = session.execute("SELECT doc_page_id from documents where doc_id = 287988 ALLOW FILTERING")# , page_text from documents')
+docs2 = session.execute("SELECT doc_page_id from documents where doc_id = 64428 ALLOW FILTERING")
 
 for doc in docs:
     docIDs.append(doc.doc_page_id)
+for doc2 in docs2:
+    docIDs.append(doc2.doc_page_id)
+
 
 #random.shuffle(docIDs)
 
@@ -62,10 +66,10 @@ def checkIfVirExist(viralID):
         return True
 
 def insertOrUpdateViral(p, p2):
-    if checkIfVirExist(p.doc_page_id):
-        session.execute("UPDATE virals SET similar_pages = similar_pages + ['{}'] WHERE viral_id = '{}'".format(p2.doc_page_id, p.doc_page_id))
+    if checkIfVirExist(p):
+        session.execute("UPDATE virals SET similar_pages = similar_pages + ['{}'] WHERE viral_id = '{}'".format(p2 ,p))
     else:
-        session.execute("INSERT INTO virals (viral_id,page_id, similar_pages, status, method_name)VALUES ('{}','{}',['{}'],'{}','{}')".format(p.doc_page_id, p.doc_page_id, p2.doc_page_id,NEW_STATUS,METHOD_NAME))
+        session.execute("INSERT INTO virals (viral_id,page_id, similar_pages, status, method_name)VALUES ('{}','{}',['{}'],'{}','{}')".format(p, p, p2,NEW_STATUS,METHOD_NAME))
 
 
 
@@ -85,8 +89,11 @@ print(lenDocIDs)
 for i in range(0,lenDocIDs - 1):
     page1query = "SELECT doc_id , doc_page_id , page_text from documents WHERE doc_page_id = '{}'".format(docIDs[i])
     page1 = session.execute(page1query)
+    text_page1 = ""
+    id_page1 = ""
     for p  in page1:
         text_page1 = p.page_text
+        id_page1 = p.doc_page_id
     words_page1 = text_page1.split(' ')
     shinglesInPage1 = set()
     for ind in range(0, len(words_page1) - 2):
@@ -99,8 +106,12 @@ for i in range(0,lenDocIDs - 1):
         #numDocs += 1
         #currDocID = doc.doc_page_id
         #docsIDs.append(currDocID)
+        text_page2 = ""
+        id_page2 = ""
         for p2 in page2:
             text_page2 = p2.page_text
+            id_page2 = p2.doc_page_id
+
         words_page2 = text_page2.split(' ')
         shinglesInPage2 = set()
         for ind in range(0, len(words_page2) - 2):
@@ -176,7 +187,7 @@ for i in range(0,lenDocIDs - 1):
             J = (len(shinglesInPage1.intersection(shinglesInPage2)) / len(shinglesInPage1.union(shinglesInPage2)))
             if J > MIN_JAQ:
                 print('insert')
-                insertOrUpdateViral(page1, page2)
+                insertOrUpdateViral(id_page1, id_page2)
         else:
             underThrsh += 1
 

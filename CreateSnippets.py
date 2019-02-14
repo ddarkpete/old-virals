@@ -8,7 +8,7 @@ sys.setrecursionlimit(1500)
 #VIRAL_ID = '720896_1'
 
 
-
+'''
 def LongestSnippetRight(mainTab , docTab, i, k , snippet, lenMT, lenDT, density):
     iMax = i
     if JaccardDistance(mainTab[i],docTab[k]) > 0.2:
@@ -30,7 +30,33 @@ def LongestSnippetRight(mainTab , docTab, i, k , snippet, lenMT, lenDT, density)
             density[i] = 1
             iMax = i
         return [snippet , density, iMax]
+'''
 
+def LongestSnippetRight(mainTab , docTab, i, k , snippet, lenMT, lenDT, density):
+    snippetFlag = True
+    while snippetFlag:
+        if JaccardDistance(mainTab[i],docTab[k]) > 0.2:
+            snippet += ' ' + ' '.join( str(x) for x in docTab[k])
+            #print(type(density))
+            if i in density:
+                density[i] += 1
+            else:
+                density[i] = 1
+            if k + 10 < lenDT and i + 10 < lenMT:
+                k += 10
+                i +=10
+            else:
+                break
+        else:
+            snippet += ' ' + ' '.join( str(x) for x in docTab[k])
+            if i in density:
+                density[i] += 1
+            else:
+                density[i] = 1
+            break
+    return [snippet , density, i]
+
+'''
 def LongestSnippetLeft(mainTab , docTab, i, k , snippet,density):
         iMin = i
         if JaccardDistance(mainTab[i],docTab[k]) > 0.3:
@@ -50,13 +76,36 @@ def LongestSnippetLeft(mainTab , docTab, i, k , snippet,density):
             else:
                 density[i] = 1
             return [snippet , density, iMin]
+'''
+def LongestSnippetLeft(mainTab , docTab, i, k , snippet,density):
+    snippetFlag = True
+    while snippetFlag:
+        if JaccardDistance(mainTab[i],docTab[k]) > 0.3:
+            snippet += ' ' + ' '.join( str(x) for x in docTab[k])
+            if i in density:
+                density[i] += 1
+            else:
+                density[i] = 1
+            if k - 10 > 0 and i - 10 > 0:
+                i -= 10
+                k -= 10
+            else:
+                break
+        else:
+            snippet += ' ' + ' '.join( str(x) for x in docTab[k])
+            if i in density:
+                density[i] += 1
+            else:
+                density[i] = 1
+            break
+    return [snippet , density, i]        
 
 
 def JaccardDistance(a, b):
     a = set(a)
     b = set(b)
     return 1.0 * len(a&b)/len(a|b)
-
+'''
 def LongestDocSnippet(i, start, end, ranges, maxLen):
     maxLen = end - start
 
@@ -78,11 +127,30 @@ def LongestDocSnippet(i, start, end, ranges, maxLen):
         return LongestDocSnippet(i + 1, start, end, ranges, maxLen)
     else:
         return LongestDocSnippet(i + 1, start, end, ranges, maxLen)
+'''
+
+def LongestDocSnippet(i, start, end, ranges, maxLen):
+    while i + 1 < len(ranges):
+        maxLen = end - start
+        nextPair = ranges[i + 1]
+
+        if nextPair[0] > end:
+            break
+        elif nextPair[0] >= start and nextPair[0] <= end and nextPair[1] >= end:
+            end = nextPair[1]
+            i+=1
+            #return LongestDocSnippet(i + 1, start, end, ranges, maxLen)
+        else:
+            i+=1
+            #return LongestDocSnippet(i + 1, start, end, ranges, maxLen)
+    tab = [start , end, maxLen]
+    return tab
+
 
 cluster = Cluster() 
 session = cluster.connect('oldviralskeyspace')
 session.default_timeout = 6000
-viralsIDs = session.execute("SELECT viral_id from virals ")
+viralsIDs = session.execute("SELECT viral_id from virals")
 #viralsIDs = ['720896_1']
 
 for vID in viralsIDs:
@@ -120,7 +188,7 @@ for vID in viralsIDs:
         snippets = []
         for i in range(0,len(mainDoc10Grams)):
                 for k in range(0,len(text10Grams)):
-                    if JaccardDistance(mainDoc10Grams[i],text10Grams[k]) > 0.8:
+                    if JaccardDistance(mainDoc10Grams[i],text10Grams[k]) > 0.2:
                         '''
                         print(' '.join( str(i) for  i in text10Grams[k-50]) + ' '.join( str(i) for  i in text10Grams[k-40]) + ' '.join( str(i) for  i in text10Grams[k-30]) + ' '.join( str(i) for  i in text10Grams[k-20]) + ' '.join( str(i) for  i in text10Grams[k-10]) + ' '.join( str(i) for  i in text10Grams[k]) + ' '.join( str(i) for  i in text10Grams[k+10]))
                         print()

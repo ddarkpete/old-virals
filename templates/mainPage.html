@@ -9,13 +9,13 @@
       <h1 class="my-4">Virals</h1>
 
       <label for="sel1">Choose method   :    </label>
-      <select title="Choose method" class="selectpicker">
-          <option>Method 1</option>
-          <option>Method 2</option>
-          <option>Method 3</option>
-          <option>Method 4</option>
+      <select id="methodSelect" title="Choose method" class="selectpicker">
+          <option id="all" {% if met == 1 %} selected {% endif %}>All</option>
+          <option id="ngrams" {% if met == 2 %} selected {% endif %}>N-grams</option>
+          <option id="shingling"{% if met == 3 %} selected {% endif %}>Shingling</option>
+          <!--<option>Method 4</option>-->
       </select>
-      <button type="button" class="btn">Submit</button>
+      <!--<button type="button" class="btn">Submit</button>-->
 
       {% for viral in virals %}
       <div class="row">

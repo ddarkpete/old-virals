@@ -72,3 +72,18 @@ $('.snippetText').each(function () {
     $('#' + this.id).html(spans.join(" "));
 
 });
+
+$('#methodSelect').change(function(){
+    var item = $(this).val();
+
+    if (item == "N-grams")
+    {
+        window.location.href = '/ngrams'
+    } else if (item === "Shingling")
+    {
+        window.location.href = '/shingling'
+    } else if (item === "All")
+    {
+        window.location.href = '/all'
+    }
+});
