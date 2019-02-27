@@ -73,6 +73,13 @@ $('.snippetText').each(function () {
 
 });
 
+$('.mainSnippet').each(function () {
+    var txt= $('#' + this.id).text();
+    if(txt.length > 155)
+        txt = txt.substring(0,500) + '.....';
+    $('#' + this.id).html(txt);
+});
+
 $('#methodSelect').change(function(){
     var item = $(this).val();
 
