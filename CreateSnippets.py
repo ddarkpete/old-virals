@@ -150,11 +150,12 @@ def LongestDocSnippet(i, start, end, ranges, maxLen):
 cluster = Cluster() 
 session = cluster.connect('oldviralskeyspace')
 session.default_timeout = 6000
-viralsIDs = session.execute("SELECT viral_id from virals")
+viralsIDs = session.execute("SELECT viral_id , page_id from virals where method_name = 'TFIDF' ALLOW FILTERING ")
 #viralsIDs = ['720896_1']
 
 for vID in viralsIDs:
     VIRAL_ID = vID.viral_id
+    page_id = vID.page_id
     print(VIRAL_ID)
     virals = session.execute("SELECT similar_pages from virals WHERE viral_id = '{}'".format(VIRAL_ID))
     viralDensity = {}
@@ -177,7 +178,7 @@ for vID in viralsIDs:
     docTexts = []
     for d in documents:
         docTexts.append(d.page_text)
-    mainTextRow = session.execute("SELECT page_text from documents WHERE doc_page_id = '{}'".format(VIRAL_ID))
+    mainTextRow = session.execute("SELECT page_text from documents WHERE doc_page_id = '{}'".format(page_id))
     mainDoc10Grams = []
     for m in mainTextRow:
             mainDoc10Grams = list(ngrams(m.page_text.split(), 10))

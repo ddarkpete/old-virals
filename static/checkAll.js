@@ -93,4 +93,8 @@ $('#methodSelect').change(function(){
     {
         window.location.href = '/all'
     }
+    else if (item === "TFIDF")
+    {
+        window.location.href = '/tfidf'
+    }
 });

@@ -25,6 +25,9 @@ def mainPage(method):
     elif method == 'shingling':
         virals = session.execute("SELECT * from virals where method_name = 'SHINGLING' ALLOW FILTERING")
         met = 3
+    elif method == 'tfidf':
+        virals = session.execute("SELECT * from virals where method_name = 'TFIDF' ALLOW FILTERING")
+        met = 4
     else:
         return redirect('/all')
     return render_template('mainPage.html', virals = virals, met = met)
