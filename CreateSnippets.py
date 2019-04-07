@@ -150,7 +150,7 @@ def LongestDocSnippet(i, start, end, ranges, maxLen):
 cluster = Cluster() 
 session = cluster.connect('oldviralskeyspace')
 session.default_timeout = 6000
-viralsIDs = session.execute("SELECT viral_id , page_id from virals where method_name = 'TFIDF' ALLOW FILTERING ")
+viralsIDs = session.execute("SELECT viral_id , page_id from virals where status = 'NEW' ALLOW FILTERING ")
 #viralsIDs = ['720896_1']
 
 for vID in viralsIDs:

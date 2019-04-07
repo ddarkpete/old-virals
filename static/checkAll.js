@@ -54,6 +54,30 @@ $(function()  {
 });
 */
 
+$('.snippetText').each(function () {
+    txt = $('#' + this.id).text()
+    words = txt.split(" ");
+    for(var x = 0; x < words.length; x++){
+        if(words[x]=='//'){
+            words[x] = '<br>'
+        }
+    }
+
+    $('#' + this.id).html(words.join(" "));
+});
+
+$('#mainText').each(function () {
+    txt = $('#mainText').text()
+    words = txt.split(" ");
+    for(var x = 0; x < words.length; x++){
+        if(words[x]=='//'){
+            words[x] = '<br>'
+        }
+    }
+
+    $('#mainText').html(words.join(" "));
+});
+
 
 $('.snippetText').each(function () {
     var mainWords = $('#mainText').text().split(" ")

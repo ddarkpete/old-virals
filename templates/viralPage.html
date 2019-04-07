@@ -13,7 +13,7 @@
                 <div class="card h-100">
                   <div class="card-body">
                     <h4 class="card-title">
-                      <a href="/text/{{ vir_id }}">{{ vir_id}}</a>
+                      <a href="/text/{{ vir_id }}">{{ virTitle}}</a>
                     </h4>
                     <p class="card-text" id="mainText" style="height:70vh ; overflow:auto">{{ viralSnippet }}</p>
                   </div>
@@ -34,6 +34,11 @@
                 <input class="form-check-input" type="checkbox" {% if article.issimilar["{{ vir_id }}"] %} checked {% endif %} " id="{{ article.doc_page_id }}", name="virals">
                 <label class="form-check-label" for="{{ article.doc_page_id }}">
                   Similar text
+                </label>
+                <br>
+                <input class="form-check-input" type="checkbox" {% if article.issimilar["{{ vir_id }}" + "_INT"] %} checked {% endif %} " id="{{ article.doc_page_id }}", name="virals">
+                <label class="form-check-label" for="{{ article.doc_page_id }}">
+                  Interesting text
                 </label>
               </div>
             </div>

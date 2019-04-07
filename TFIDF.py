@@ -5,6 +5,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import math
+import random
 '''
 def cosine_similarity(vector1, vector2):
     dot_product = sum(p*q for p,q in zip(vector1, vector2))
@@ -40,6 +41,7 @@ NEW_STATUS = "NEW"
 
 docs = session.execute('SELECT doc_page_id from documents')
 
+
 docIDs =[]
 
 for doc in docs:
@@ -47,34 +49,38 @@ for doc in docs:
     #print(doc.doc_id)
 
 docIDs = list(set(docIDs))
-
+random.shuffle(docIDs)
 lenDocIDs = len(docIDs)
 print(lenDocIDs)
 for i in range(0,lenDocIDs - 1):
+    page1 = session.execute("SELECT doc_id , doc_page_id , page_text , doc_title from documents WHERE doc_page_id = '{}' ALLOW FILTERING".format(docIDs[i]))
+    for p in page1:
+        document_0 = p.page_text
+        document_0_title = p.doc_title
     for j in range( i + 1, lenDocIDs):
-        page1 = session.execute("SELECT doc_id , doc_page_id , page_text from documents WHERE doc_page_id = '{}' ALLOW FILTERING".format(docIDs[i]))
-        page2 = session.execute("SELECT doc_id , doc_page_id , page_text from documents WHERE doc_page_id = '{}' ALLOW FILTERING".format(docIDs[j]))
-        for p in page1:
-            document_0 = p.page_text
-            for p2 in page2:
-                document_1 = p2.page_text
-                all_documents = [document_0 ,document_1]
-                tfidf = sklearn_tfidf.fit_transform(all_documents)
-                similarityMatrix = cosine_similarity(tfidf)
-                if similarityMatrix[0][1] > 0.3:
-                    print('insert')
-                    print(similarityMatrix[0][1])
-                    insertOrUpdateViral(p, p2)
-                #exit()
-                '''
-                tfidf_comparisons = []
-                for count_0, doc_0 in enumerate(tfidf.toarray()):
-                    for count_1, doc_1 in enumerate(tfidf.toarray()):
-                        tfidf_comparisons.append((cosine_similarity(doc_0, doc_1), count_0, count_1))
-                
-                for x in sorted(tfidf_comparisons, reverse = True):
-                    print(x)
-                '''
+        page2 = session.execute("SELECT doc_id , doc_page_id , page_text , doc_title from documents WHERE doc_page_id = '{}' ALLOW FILTERING".format(docIDs[j]))
+        for p2 in page2:
+            document_1 = p2.page_text
+            document_1_title = p.doc_title
+            if document_0_title == document_1_title:
+                break
+            all_documents = [document_0 ,document_1]
+            tfidf = sklearn_tfidf.fit_transform(all_documents)
+            similarityMatrix = cosine_similarity(tfidf)
+            if similarityMatrix[0][1] > 0.2:
+                print('insert')
+                print(similarityMatrix[0][1])
+                insertOrUpdateViral(p, p2)
+            #exit()
+            '''
+            tfidf_comparisons = []
+            for count_0, doc_0 in enumerate(tfidf.toarray()):
+                for count_1, doc_1 in enumerate(tfidf.toarray()):
+                    tfidf_comparisons.append((cosine_similarity(doc_0, doc_1), count_0, count_1))
+            
+            for x in sorted(tfidf_comparisons, reverse = True):
+                print(x)
+            '''
 
 
 

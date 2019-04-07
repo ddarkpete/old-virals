@@ -17,16 +17,16 @@ def redirToAll():
 @app.route('/<method>')
 def mainPage(method):
     if method == 'all' or method == '':
-        virals = session.execute("SELECT * from virals")
+        virals = session.execute("SELECT viral_id , status , snippet from virals")
         met = 1
     elif method == 'ngrams':
-        virals = session.execute("SELECT * from virals where method_name = '4GRAMS' ALLOW FILTERING")
+        virals = session.execute("SELECT viral_id , status , snippet from virals where method_name = '4GRAMS' ALLOW FILTERING")
         met = 2   
     elif method == 'shingling':
-        virals = session.execute("SELECT * from virals where method_name = 'SHINGLING' ALLOW FILTERING")
+        virals = session.execute("SELECT viral_id , status , snippet from virals where method_name = 'SHINGLING' ALLOW FILTERING")
         met = 3
     elif method == 'tfidf':
-        virals = session.execute("SELECT * from virals where method_name = 'TFIDF' ALLOW FILTERING")
+        virals = session.execute("SELECT viral_id , status , snippet from virals where method_name = 'TFIDF' ALLOW FILTERING")
         met = 4
     else:
         return redirect('/all')
@@ -50,13 +50,16 @@ def viralPage(vir_id):
             keyval = pair.split('=')
             simVirals[keyval[0]] = keyval[1]
         for s in simVirals:
-            cql = "UPDATE documents SET issimilar = issimilar + {{'{}' : {}}} WHERE doc_page_id = '{}'".format(vir_id, str(simVirals[s]).lower(), s)
+            if s[-4:] == 'INT':
+                cql = "UPDATE documents SET isinterestingsimilar = isinterestingsimilar + {{'{}' : {}}} WHERE doc_page_id = '{}'".format(vir_id, str(simVirals[s]).lower(), s[:-4])
+            else:
+                cql = "UPDATE documents SET issimilar = issimilar + {{'{}' : {}}} WHERE doc_page_id = '{}'".format(vir_id, str(simVirals[s]).lower(), s)
             session.execute(cql)
 
         session.execute("UPDATE virals SET status = 'REVIEWED' WHERE viral_id = '{}'".format(vir_id))
         return "200"
     else:
-        viral = session.execute("SELECT * FROM virals WHERE viral_id = '{}'".format(vir_id))
+        viral = session.execute("SELECT similar_pages , snippet , page_title , status FROM virals WHERE viral_id = '{}'".format(vir_id))
         #query = "SELECT * FROM documents WHERE doc_page_id IN ('"
         viralSnippet=""
         idsInString = ""
@@ -64,12 +67,13 @@ def viralPage(vir_id):
         for v in viral:
             idsInString = str(v.similar_pages)[1:-1]
             viralSnippet = v.snippet
+            virTitle =  v.page_title
             #viral
             if v.status == 'NEW':
                 session.execute("UPDATE virals SET status = 'VIEWED' WHERE viral_id = '{}'".format(vir_id))
-        rows = session.execute("SELECT * FROM documents WHERE doc_page_id IN ({})".format(idsInString))
+        rows = session.execute("SELECT doc_page_id , doc_title , snippets , issimilar FROM documents WHERE doc_page_id IN ({})".format(idsInString))
         print(vir_id)
-        return render_template('viralPage.html', articles = rows, vir_id = vir_id, viralSnippet=viralSnippet)
+        return render_template('viralPage.html', articles = rows, vir_id = vir_id, viralSnippet=viralSnippet, virTitle=virTitle)
 
 
 

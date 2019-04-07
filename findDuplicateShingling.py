@@ -18,7 +18,7 @@ session.default_timeout = 6000
 
 METHOD_NAME = "SHINGLING"
 NEW_STATUS = "NEW"
-MIN_JAQ = 0.089
+MIN_JAQ = 0.06
 
 docIDs =[]
 docs = session.execute("SELECT doc_page_id from documents where doc_id = 287988 ALLOW FILTERING")# , page_text from documents')
