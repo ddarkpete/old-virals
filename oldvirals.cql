@@ -28,6 +28,7 @@ CREATE TABLE oldviralskeyspace.documents (
     doc_date_stop date,
     doc_id int,
     doc_title text,
+    isinterestingsimilar map<ascii, boolean>,
     issimilar map<ascii, boolean>,
     page_no int,
     page_text text,
@@ -51,6 +52,7 @@ CREATE TABLE oldviralskeyspace.virals (
     viral_id ascii PRIMARY KEY,
     method_name ascii,
     page_id ascii,
+    page_title text,
     similar_pages list<text>,
     snippet text,
     status ascii
