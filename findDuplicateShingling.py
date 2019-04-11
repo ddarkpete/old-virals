@@ -87,13 +87,15 @@ numDocs = 0
 lenDocIDs = len(docIDs)
 print(lenDocIDs)
 for i in range(0,lenDocIDs - 1):
-    page1query = "SELECT doc_id , doc_page_id , page_text from documents WHERE doc_page_id = '{}'".format(docIDs[i])
+    page1query = "SELECT doc_id , doc_page_id , page_text , doc_title from documents WHERE doc_page_id = '{}'".format(docIDs[i])
     page1 = session.execute(page1query)
     text_page1 = ""
     id_page1 = ""
+    title_page1 = ""
     for p  in page1:
         text_page1 = p.page_text
         id_page1 = p.doc_page_id
+        title_page1 = p.doc_title
     words_page1 = text_page1.split(' ')
     shinglesInPage1 = set()
     for ind in range(0, len(words_page1) - 2):
@@ -101,16 +103,21 @@ for i in range(0,lenDocIDs - 1):
         shingle = strToIntHash(shingle)
         shinglesInPage1.add(shingle)
     for j in range( i + 1, lenDocIDs):
-        page2query = "SELECT doc_id , doc_page_id , page_text from documents WHERE doc_page_id = '{}'".format(docIDs[j])
+        page2query = "SELECT doc_id , doc_page_id , page_text , doc_title from documents WHERE doc_page_id = '{}'".format(docIDs[j])
         page2 = session.execute(page2query)
         #numDocs += 1
         #currDocID = doc.doc_page_id
         #docsIDs.append(currDocID)
         text_page2 = ""
         id_page2 = ""
+        title_page2 = ""
         for p2 in page2:
             text_page2 = p2.page_text
             id_page2 = p2.doc_page_id
+            title_page2 = p2.doc_title
+
+        if title_page1 == title_page2:
+            continue
 
         words_page2 = text_page2.split(' ')
         shinglesInPage2 = set()

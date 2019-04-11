@@ -43,20 +43,24 @@ docIDs = list(set(docIDs))
 lenDocIDs = len(docIDs)
 print(lenDocIDs)
 for i in range(0,lenDocIDs - 1):
+    page1query = "SELECT doc_id , doc_page_id , page_text , doc_title from documents WHERE doc_page_id = '{}'".format(docIDs[i])
+    page1 = session.execute(page1query)
+    for p in page1:
+        page1_4grams = list(ngrams(p.page_text.split(), 4))
+        page1_title = p.doc_title   
     for j in range( i + 1, lenDocIDs):
-        page1query = "SELECT doc_id , doc_page_id , page_text from documents WHERE doc_page_id = '{}'".format(docIDs[i])
         page2query = "SELECT doc_id , doc_page_id , page_text from documents WHERE doc_page_id = '{}'".format(docIDs[j])
-        page1 = session.execute(page1query)
         page2 = session.execute(page2query)
-        for p in page1:
-            page1_4grams = list(ngrams(p.page_text.split(), 4))
-            for p2 in page2:
-                try:
-                    page2_4grams = list(ngrams(p2.page_text.split(),4))
-                except AttributeError:
-                    print(p2.doc_page_id)
-                    continue
-                jq = jaccard_distance(page1_4grams,page2_4grams)
-                if jq > MIN_JAQ:
-                    print('insert')
-                    insertOrUpdateViral(p, p2)
+        for p2 in page2:
+            page2_title = p2.doc_title
+            if page1_title == page2_title:
+                break
+            try:
+                page2_4grams = list(ngrams(p2.page_text.split(),4))
+            except AttributeError:
+                print(p2.doc_page_id)
+                continue
+            jq = jaccard_distance(page1_4grams,page2_4grams)
+            if jq > MIN_JAQ:
+                print('insert')
+                insertOrUpdateViral(p, p2)
