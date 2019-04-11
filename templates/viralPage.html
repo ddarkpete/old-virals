@@ -30,7 +30,7 @@
                   <a href="/text/{{ article.doc_page_id }}">{{ article.doc_title }}</a>
                 </h4>
                 <p class="card-text snippetText" id = "{{ article.doc_page_id }}" style="height:70vh ; overflow:auto">{{ article.snippets[vir_id] }}</p>
-                <p class="card-text">{{ article.doc_date_start }}</p>
+                <p class="card-text">{{ article.doc_date_start }}  -  {{ article.doc_date_stop }}</p>
                 <input class="form-check-input" type="checkbox" {% if article.issimilar["{{ vir_id }}"] %} checked {% endif %} " id="{{ article.doc_page_id }}", name="virals">
                 <label class="form-check-label" for="{{ article.doc_page_id }}">
                   Similar text

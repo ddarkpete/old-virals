@@ -34,11 +34,17 @@ def mainPage(method):
 
 @app.route('/text/<id>')
 def text(id):
-    rows = session.execute('SELECT * from oldvirals WHERE ov_id = {}'.format(id))
-    ovText = ""
+    rows = session.execute("SELECT page_text , doc_title , doc_date_start , doc_date_stop from documents WHERE doc_page_id = '{}'".format(id))
+    page_text = ""
+    doc_title = ""
+    doc_date_start = ""
+    doc_date_stop = ""
     for query_row in rows:
-        ovText = query_row.ov_text
-    return render_template('OneText.html', text = ovText)
+        page_text = query_row.page_text
+        doc_title = query_row.doc_title
+        doc_date_start = query_row.doc_date_start
+        doc_date_stop = query_row.doc_date_stop
+    return render_template('OneText.html', text = page_text, title = doc_title , doc_date_start = doc_date_start , doc_date_stop = doc_date_stop)
 
 @app.route('/viral/<vir_id>',methods=['GET', 'POST'])
 def viralPage(vir_id):
@@ -71,7 +77,7 @@ def viralPage(vir_id):
             #viral
             if v.status == 'NEW':
                 session.execute("UPDATE virals SET status = 'VIEWED' WHERE viral_id = '{}'".format(vir_id))
-        rows = session.execute("SELECT doc_page_id , doc_title , snippets , issimilar FROM documents WHERE doc_page_id IN ({})".format(idsInString))
+        rows = session.execute("SELECT doc_page_id , doc_title , snippets , issimilar , doc_date_start, doc_date_stop FROM documents WHERE doc_page_id IN ({})".format(idsInString))
         print(vir_id)
         return render_template('viralPage.html', articles = rows, vir_id = vir_id, viralSnippet=viralSnippet, virTitle=virTitle)
 
