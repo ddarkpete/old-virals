@@ -18,17 +18,24 @@ session.default_timeout = 6000
 
 METHOD_NAME = "SHINGLING"
 NEW_STATUS = "NEW"
-MIN_JAQ = 0.06
+MIN_JAQ = 0.07
 
 docIDs =[]
-docs = session.execute("SELECT doc_page_id from documents where doc_id = 287988 ALLOW FILTERING")# , page_text from documents')
-docs2 = session.execute("SELECT doc_page_id from documents where doc_id = 64428 ALLOW FILTERING")
+'''
+docs = session.execute("SELECT doc_page_id from documents")# , page_text from documents')
+#docs2 = session.execute("SELECT doc_page_id from documents where doc_id = 64428 ALLOW FILTERING")
 
 for doc in docs:
     docIDs.append(doc.doc_page_id)
+'''
+'''
 for doc2 in docs2:
     docIDs.append(doc2.doc_page_id)
-
+'''
+tag = session.execute("SELECT documents FROM tags WHERE tagname = '{}'".format("DONOSI"))
+for t in tag:
+    for pagid in t.documents:
+        docIDs.append(pagid)
 
 #random.shuffle(docIDs)
 
@@ -69,7 +76,7 @@ def insertOrUpdateViral(p, p2):
     if checkIfVirExist(p):
         session.execute("UPDATE virals SET similar_pages = similar_pages + ['{}'] WHERE viral_id = '{}'".format(p2 ,p))
     else:
-        session.execute("INSERT INTO virals (viral_id,page_id, similar_pages, status, method_name)VALUES ('{}','{}',['{}'],'{}','{}')".format(p, p, p2,NEW_STATUS,METHOD_NAME))
+        session.execute("INSERT INTO virals (viral_id,page_id, similar_pages, status, method_name, page_title)VALUES ('{}','{}',['{}'],'{}','{}','{}')".format(p, p, p2,NEW_STATUS,METHOD_NAME, p.doc_title))
 
 
 
@@ -96,7 +103,8 @@ for i in range(0,lenDocIDs - 1):
         text_page1 = p.page_text
         id_page1 = p.doc_page_id
         title_page1 = p.doc_title
-    words_page1 = text_page1.split(' ')
+    words_page1 = text_page1.replace('/','').split(' ')
+    words_page1 = [word for word in words_page1 if len(word) > 1]
     shinglesInPage1 = set()
     for ind in range(0, len(words_page1) - 2):
         shingle = "{} {} {}".format(words_page1[ind], words_page1[ind + 1], words_page1[ind + 2])
@@ -116,87 +124,88 @@ for i in range(0,lenDocIDs - 1):
             id_page2 = p2.doc_page_id
             title_page2 = p2.doc_title
 
-        if title_page1 == title_page2:
-            continue
+            if title_page1 == title_page2:
+                break
 
-        words_page2 = text_page2.split(' ')
-        shinglesInPage2 = set()
-        for ind in range(0, len(words_page2) - 2):
-            shingle = "{} {} {}".format(words_page2[ind], words_page2[ind + 1], words_page2[ind + 2])
-            shingle = strToIntHash(shingle)
-            shinglesInPage2.add(shingle)
-    
-        #docsShingles[currDocID] = shinglesInDoc
-        #allShingles = allShingles + (len(words) - 2)
-        '''
-        with open(fileName, 'r') as file:
-            for line in file:
-                numDocs += 1
-                line  = line.split('\t')
-                currDocID = line[0]
-                docsIDs.append(currDocID)
-                words = line[4].split(' ')
-                shinglesInDoc = set()
-
-                for ind in range(0, len(words) - 2):
-                    shingle = "{} {} {}".format(words[ind], words[ind + 1], words[ind + 2])
-                    shingle = strToIntHash(shingle)
-                    shinglesInDoc.add(shingle)
-                
-                docsShingles[currDocID] = shinglesInDoc
-                allShingles = allShingles + (len(words) - 2)
-        '''
-        #print("Average shingle per doc: {}".format(allShingles/numDocs))
-
-        #TRIANGLE MATRICE
-
-        #elemCount = int(numDocs * (numDocs - 1) / 2 )
-
-        #estJSim = [ 0 for x in range(elemCount)]
-        #estJSim = JSim
-
-        maxShingleId = 2 * 32 - 1
-        nextPrime = 4294967311
-
-        coeffA = pickRandomCoefs(hashNum)
-        coeffB = pickRandomCoefs(hashNum)
-
-        signature_pag1 = []
-        signature_pag2 = []
-
-        for i in range(0, hashNum):
-            minHashCode = nextPrime + 1
-            for shingleID in shinglesInPage1:
-                hashCode = (coeffA[i] * shingleID + coeffB[i]) % nextPrime
-                if hashCode < minHashCode:
-                    minHashCode = hashCode
-            signature_pag1.append(minHashCode)
-            
-            minHashCode = nextPrime + 1
-            for shingleID in shinglesInPage2:
-                hashCode = (coeffA[i] * shingleID + coeffB[i]) % nextPrime
-                if hashCode < minHashCode:
-                    minHashCode = hashCode
-            signature_pag2.append(minHashCode)
-   
-        count = 0
-        for k in range(0, hashNum):
-            count += (signature_pag1[k] == signature_pag2[k])
+            words_page2 = text_page2.replace('/','').split(' ')
+            words_page2 = [word for word in words_page2 if len(word) > 1]
+            shinglesInPage2 = set()
+            for ind in range(0, len(words_page2) - 2):
+                shingle = "{} {} {}".format(words_page2[ind], words_page2[ind + 1], words_page2[ind + 2])
+                shingle = strToIntHash(shingle)
+                shinglesInPage2.add(shingle)
         
-        estJ = (count / hashNum)
+            #docsShingles[currDocID] = shinglesInDoc
+            #allShingles = allShingles + (len(words) - 2)
+            '''
+            with open(fileName, 'r') as file:
+                for line in file:
+                    numDocs += 1
+                    line  = line.split('\t')
+                    currDocID = line[0]
+                    docsIDs.append(currDocID)
+                    words = line[4].split(' ')
+                    shinglesInDoc = set()
 
-        threshold = 0.5
-        underThrsh = 0
-        #if(estJ > 0.0):
-        #    print(estJ)
-        if estJ > threshold:
+                    for ind in range(0, len(words) - 2):
+                        shingle = "{} {} {}".format(words[ind], words[ind + 1], words[ind + 2])
+                        shingle = strToIntHash(shingle)
+                        shinglesInDoc.add(shingle)
+                    
+                    docsShingles[currDocID] = shinglesInDoc
+                    allShingles = allShingles + (len(words) - 2)
+            '''
+            #print("Average shingle per doc: {}".format(allShingles/numDocs))
 
-            J = (len(shinglesInPage1.intersection(shinglesInPage2)) / len(shinglesInPage1.union(shinglesInPage2)))
-            if J > MIN_JAQ:
-                print('insert')
-                insertOrUpdateViral(id_page1, id_page2)
-        else:
-            underThrsh += 1
+            #TRIANGLE MATRICE
+
+            #elemCount = int(numDocs * (numDocs - 1) / 2 )
+
+            #estJSim = [ 0 for x in range(elemCount)]
+            #estJSim = JSim
+
+            maxShingleId = 2 ** 32 - 1
+            nextPrime = 4294967311
+
+            coeffA = pickRandomCoefs(hashNum)
+            coeffB = pickRandomCoefs(hashNum)
+
+            signature_pag1 = []
+            signature_pag2 = []
+
+            for i in range(0, hashNum):
+                minHashCode = nextPrime + 1
+                for shingleID in shinglesInPage1:
+                    hashCode = (coeffA[i] * shingleID + coeffB[i]) % nextPrime
+                    if hashCode < minHashCode:
+                        minHashCode = hashCode
+                signature_pag1.append(minHashCode)
+                
+                minHashCode = nextPrime + 1
+                for shingleID in shinglesInPage2:
+                    hashCode = (coeffA[i] * shingleID + coeffB[i]) % nextPrime
+                    if hashCode < minHashCode:
+                        minHashCode = hashCode
+                signature_pag2.append(minHashCode)
+    
+            count = 0
+            for k in range(0, hashNum):
+                count += (signature_pag1[k] == signature_pag2[k])
+            
+            estJ = (count / hashNum)
+            
+            threshold = 0.0
+            underThrsh = 0
+            if(estJ > 0.0):
+                print(estJ)
+            if estJ > threshold:
+
+                J = (len(shinglesInPage1.intersection(shinglesInPage2)) / len(shinglesInPage1.union(shinglesInPage2)))
+                if J > MIN_JAQ:
+                    print('insert')
+                    insertOrUpdateViral(id_page1, id_page2)
+            else:
+                underThrsh += 1
 
  
 

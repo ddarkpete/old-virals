@@ -26,7 +26,7 @@ def insertOrUpdateViral(p, p2):
     if checkIfVirExist(p.doc_page_id + '_TFIDF'):
         session.execute("UPDATE virals SET similar_pages = similar_pages + ['{}'] WHERE viral_id = '{}'".format(p.doc_page_id, p2.doc_page_id))
     else:
-        session.execute("INSERT INTO virals (viral_id,page_id, similar_pages, status, method_name)VALUES ('{}','{}',['{}'],'{}','{}')".format(p.doc_page_id + '_TFIDF', p.doc_page_id, p2.doc_page_id,NEW_STATUS,METHOD_NAME))
+        session.execute("INSERT INTO virals (viral_id,page_id, similar_pages, status, method_name, page_title)VALUES ('{}','{}',['{}'],'{}','{}','{}')".format(p.doc_page_id + '_TFIDF', p.doc_page_id, p2.doc_page_id,NEW_STATUS,METHOD_NAME, p.doc_title))
 
 
 tokenize = lambda doc: doc.lower().split(' ')
@@ -39,14 +39,21 @@ session.default_timeout = 6000
 METHOD_NAME = "TFIDF"
 NEW_STATUS = "NEW"
 
-docs = session.execute('SELECT doc_page_id from documents')
+#docs = session.execute('SELECT doc_page_id from documents')
 
 
 docIDs =[]
-
+'''
 for doc in docs:
     docIDs.append(doc.doc_page_id)
     #print(doc.doc_id)
+'''
+
+tag = session.execute("SELECT documents FROM tags WHERE tagname = '{}'".format("DONOSI"))
+for t in tag:
+    for pagid in t.documents:
+        docIDs.append(pagid)
+
 
 docIDs = list(set(docIDs))
 random.shuffle(docIDs)
@@ -55,21 +62,24 @@ print(lenDocIDs)
 for i in range(0,lenDocIDs - 1):
     page1 = session.execute("SELECT doc_id , doc_page_id , page_text , doc_title from documents WHERE doc_page_id = '{}' ALLOW FILTERING".format(docIDs[i]))
     for p in page1:
-        document_0 = p.page_text
+        document_0 = p.page_text.replace('/', '')
+        document_0 = ' '.join([word for word in document_0.split() if len(word) > 1])
         document_0_title = p.doc_title
     for j in range( i + 1, lenDocIDs):
         page2 = session.execute("SELECT doc_id , doc_page_id , page_text , doc_title from documents WHERE doc_page_id = '{}' ALLOW FILTERING".format(docIDs[j]))
         for p2 in page2:
-            document_1 = p2.page_text
-            document_1_title = p.doc_title
+            document_1 = p2.page_text.replace('/', '')
+            document_1 = ' '.join([word for word in document_1.split() if len(word) > 1])
+            document_1_title = p2.doc_title
             if document_0_title == document_1_title:
                 break
             all_documents = [document_0 ,document_1]
             tfidf = sklearn_tfidf.fit_transform(all_documents)
             similarityMatrix = cosine_similarity(tfidf)
+            #print(similarityMatrix[0][1])
             if similarityMatrix[0][1] > 0.2:
-                print('insert')
-                print(similarityMatrix[0][1])
+                print('insert {}'.format(similarityMatrix[0][1]))
+                #print(similarityMatrix[0][1])
                 insertOrUpdateViral(p, p2)
             #exit()
             '''

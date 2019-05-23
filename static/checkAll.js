@@ -1,5 +1,15 @@
 
 
+function slice2(array, chunk, offset) {
+    var subarray = [];
+    for (var i = 0; i<chunk; i++) {
+        var ind = (offset + i) % array.length;
+        subarray.push(array[ind]);
+    }
+
+    return subarray;
+}
+
 
 $('#check-all').click(function(event) {   
     if(this.checked) {
