@@ -8,9 +8,10 @@ session = cluster.connect('oldviralskeyspace')
 session.default_timeout = 6000
 
  
-TAGNAME = 'DONOSI'#sys.argv[1]
+TAGNAME = sys.argv[1]#'DONOSI'
 
-pattern = 'don[oi]{0,1}[se]{0,1}[iząaśs][aącć]{0,1}'#sys.argv[2]
+pattern = sys.argv[2]#'don[oi]{0,1}[se]{0,1}[iząaśs][aącć]{0,1}'
+
 #search_expression = re.compile(pattern)
 
 tag = session.execute("SELECT tagname from tags WHERE tagname = '{}'".format(TAGNAME))

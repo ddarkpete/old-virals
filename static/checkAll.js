@@ -1,14 +1,17 @@
+var mainNgrams = []
+var textNgrams = []
 
-
-function slice2(array, chunk, offset) {
-    var subarray = [];
-    for (var i = 0; i<chunk; i++) {
-        var ind = (offset + i) % array.length;
-        subarray.push(array[ind]);
+function chunkIt(str,chunk) {
+    var words = str.split(" ");
+    var arr = [];
+    for (var i = (chunk - 1); i < words.length; i++) {
+      var start = i - (chunk - 1);
+      arr.push(words.slice(start, start + chunk));
     }
-
-    return subarray;
-}
+    return arr.map(v => v.join(" "));
+  }
+  
+  
 
 
 $('#check-all').click(function(event) {   
@@ -88,9 +91,22 @@ $('#mainText').each(function () {
     $('#mainText').html(words.join(" "));
 });
 
+$('.snippetText').first(function () {
+    txt = $('#' + this.id).text();
+    textNgrams = chunkIt($('#' + this.id).text(),4);
+    console.log(mainNgrams);
+});
+
+$('#mainText').first(function() {
+    mainNgrams = chunkIt(this.text(),4);
+
+});
+
 
 $('.snippetText').each(function () {
     var mainWords = $('#mainText').text().split(" ")
+    var mainGrams = [];
+    //for()
     spans = []
     txt = $('#' + this.id).text();
     words = txt.split(" ");
@@ -106,6 +122,8 @@ $('.snippetText').each(function () {
     $('#' + this.id).html(spans.join(" "));
 
 });
+
+$('.s')
 
 $('.mainSnippet').each(function () {
     var txt= $('#' + this.id).text();

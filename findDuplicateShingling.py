@@ -32,7 +32,7 @@ for doc in docs:
 for doc2 in docs2:
     docIDs.append(doc2.doc_page_id)
 '''
-tag = session.execute("SELECT documents FROM tags WHERE tagname = '{}'".format("DONOSI"))
+tag = session.execute("SELECT documents FROM tags WHERE tagname = '{}'".format("WIESCI"))
 for t in tag:
     for pagid in t.documents:
         docIDs.append(pagid)
@@ -73,10 +73,10 @@ def checkIfVirExist(viralID):
         return True
 
 def insertOrUpdateViral(p, p2):
-    if checkIfVirExist(p):
-        session.execute("UPDATE virals SET similar_pages = similar_pages + ['{}'] WHERE viral_id = '{}'".format(p2 ,p))
+    if checkIfVirExist(p.doc_page_id):
+        session.execute("UPDATE virals SET similar_pages = similar_pages + ['{}'] WHERE viral_id = '{}'".format(p2.doc_page_id ,p.doc_page_id))
     else:
-        session.execute("INSERT INTO virals (viral_id,page_id, similar_pages, status, method_name, page_title)VALUES ('{}','{}',['{}'],'{}','{}','{}')".format(p, p, p2,NEW_STATUS,METHOD_NAME, p.doc_title))
+        session.execute("INSERT INTO virals (viral_id,page_id, similar_pages, status, method_name, page_title)VALUES ('{}','{}',['{}'],'{}','{}','{}')".format(p.doc_page_id, p.doc_page_id, p2.doc_page_id,NEW_STATUS,METHOD_NAME, p.doc_title))
 
 
 
@@ -203,7 +203,7 @@ for i in range(0,lenDocIDs - 1):
                 J = (len(shinglesInPage1.intersection(shinglesInPage2)) / len(shinglesInPage1.union(shinglesInPage2)))
                 if J > MIN_JAQ:
                     print('insert')
-                    insertOrUpdateViral(id_page1, id_page2)
+                    insertOrUpdateViral(p, p2)
             else:
                 underThrsh += 1
 
