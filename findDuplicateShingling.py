@@ -32,7 +32,7 @@ for doc in docs:
 for doc2 in docs2:
     docIDs.append(doc2.doc_page_id)
 '''
-tag = session.execute("SELECT documents FROM tags WHERE tagname = '{}'".format("WIESCI"))
+tag = session.execute("SELECT documents FROM tags WHERE tagname = '{}'".format("JAKPODAJA"))
 for t in tag:
     for pagid in t.documents:
         docIDs.append(pagid)
