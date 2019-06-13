@@ -40,7 +40,8 @@ for t in tag:
 #random.shuffle(docIDs)
 
 def strToIntHash(text):
-    return np.int32(int(hashlib.md5(text.encode('utf-8')).hexdigest()[:8], 16))
+    return binascii.crc32(str.encode(text)) & 0xffffffff
+    #return np.int32(int(hashlib.md5(text.encode('utf-8')).hexdigest()[:8], 16))
 
 def getTriangleIndex(i, j):
     if i == j:

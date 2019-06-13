@@ -1,20 +1,24 @@
 var mainNgrams = []
 var textNgrams = []
 
-function chunkIt(str,chunk) {
+
+function ngrams(str,n) {
+    //alert(type(str));
     var words = str.split(" ");
     var arr = [];
-    for (var i = (chunk - 1); i < words.length; i++) {
-      var start = i - (chunk - 1);
-      arr.push(words.slice(start, start + chunk));
+    for(var i = 0 ; i < words.length - n; i++ ){
+        var temparr = []
+        for(var j = i; j < i + n ; j++){
+        temparr.push(words[j]);
+        }
+        arr.push(temparr);
     }
-    return arr.map(v => v.join(" "));
-  }
-  
-  
 
+    return arr;
+}
 
-$('#check-all').click(function(event) {   
+$('#check-all').click(function(event) {
+    alert(mainNgrams);   
     if(this.checked) {
         $(':checkbox').each(function() {
             this.checked = true;                        
@@ -58,14 +62,17 @@ $('#submit-similar').click(function(event) {
 });
 
 
-/*
-var mainWords = []
 
-$(function()  {
-    
 
-});
-*/
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
+//output.innerHTML = slider.value; // Display the default slider value
+
+// Update the current slider value (each time you drag the slider handle)
+//slider.oninput = function() {
+//  output.innerHTML = this.value;
+//}
+
 
 $('.snippetText').each(function () {
     txt = $('#' + this.id).text()
@@ -91,39 +98,95 @@ $('#mainText').each(function () {
     $('#mainText').html(words.join(" "));
 });
 
-$('.snippetText').first(function () {
-    txt = $('#' + this.id).text();
-    textNgrams = chunkIt($('#' + this.id).text(),4);
-    console.log(mainNgrams);
-});
 
-$('#mainText').first(function() {
-    mainNgrams = chunkIt(this.text(),4);
+mainText = "" 
+textText = ""
 
+$('#mainText').each(function() {
+    mainText = $("#mainText").text();
 });
 
 
 $('.snippetText').each(function () {
-    var mainWords = $('#mainText').text().split(" ")
-    var mainGrams = [];
-    //for()
-    spans = []
-    txt = $('#' + this.id).text();
-    words = txt.split(" ");
-    for(var x = 0; x < words.length; x++){
-        if(mainWords.indexOf(words[x]) >= 0){
-            var span = "<span style='background-color: lightgreen;'>" + words[x] + "</span>"
-        } else {
-            var span = "<span>" + words[x] + "</span>"
-        }
-        spans.push(span);
-    }
-
-    $('#' + this.id).html(spans.join(" "));
-
+    textText = $('#' + this.id).text();
 });
 
-$('.s')
+function calcNgrams(n) {
+
+    
+
+   //
+        xd= parseInt(n);
+        
+        mainNgrams = ngrams(mainText,xd);
+        textNgrams = ngrams(textText,xd);
+        
+        
+    //});
+
+
+
+    $('.snippetText').each(function () {
+        spans = []
+        x = 0;
+        while( x < textNgrams.length){
+            if(JSON.stringify(mainNgrams).includes(JSON.stringify(textNgrams[x]))){
+                 ngram = true;
+                tempspan = [];
+                textNgrams[x].forEach(element => {
+                    tempspan.push(element)
+                });
+                z = x + 1;
+                while(ngram){
+                    if(JSON.stringify(mainNgrams).includes(JSON.stringify(textNgrams[z]))){
+                        tempspan.push(textNgrams[z][textNgrams[z].length - 1]);
+                        z+=1;
+                    } else {
+                        spans.push("<span style='background-color: lightgreen;'>" + tempspan.join(" ") + "</span>");
+                        x = z + xd;
+                        ngram = false;
+                    }
+                }
+            } else {
+                
+                spans.push("<span>" + textNgrams[x][0] + "</span>");
+                x+=1;
+            }
+        }
+        $('#' + this.id).html(spans.join(" "));
+    });
+
+    $('#mainText').each(function() {
+        spans = []
+        x = 0;
+        while( x < mainNgrams.length){
+            if(JSON.stringify(textNgrams).includes(JSON.stringify(mainNgrams[x]))){
+                ngram = true;
+                tempspan = [];
+                mainNgrams[x].forEach(element => {
+                    tempspan.push(element)
+                });
+                z = x + 1;
+                while(ngram){
+                    if(JSON.stringify(textNgrams).includes(JSON.stringify(mainNgrams[z]))){
+                        tempspan.push(mainNgrams[z][mainNgrams[z].length - 1]);
+                        z+=1;
+                    } else {
+                        spans.push("<span style='background-color: lightgreen;'>" + tempspan.join(" ") + "</span>");
+                        x = z + xd;
+                        ngram = false;
+                    }
+                }
+            } else {
+                
+                spans.push("<span>" + mainNgrams[x][0] + "</span>");
+                x+=1;
+            }
+        }
+        $('#' + this.id).html(spans.join(" "));
+        $("#ngramslabel").html(n + "-grams");
+    });
+}
 
 $('.mainSnippet').each(function () {
     var txt= $('#' + this.id).text();
