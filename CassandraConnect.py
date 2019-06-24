@@ -55,12 +55,18 @@ def viralPage(vir_id):
         for pair in pairs:
             keyval = pair.split('=')
             simVirals[keyval[0]] = keyval[1]
+
+        print(pairs)
         for s in simVirals:
-            if s[-4:] == 'INT':
+            if s[-4:] == '_INT':
                 cql = "UPDATE documents SET isinterestingsimilar = isinterestingsimilar + {{'{}' : {}}} WHERE doc_page_id = '{}'".format(vir_id, str(simVirals[s]).lower(), s[:-4])
             else:
                 cql = "UPDATE documents SET issimilar = issimilar + {{'{}' : {}}} WHERE doc_page_id = '{}'".format(vir_id, str(simVirals[s]).lower(), s)
             session.execute(cql)
+            xd = session.execute("SELECT issimilar FROM documents WHERE doc_page_id = '{}'".format(s))
+            for x in xd:
+                print(x)
+
 
         session.execute("UPDATE virals SET status = 'REVIEWED' WHERE viral_id = '{}'".format(vir_id))
         return "200"
@@ -77,7 +83,7 @@ def viralPage(vir_id):
             #viral
             if v.status == 'NEW':
                 session.execute("UPDATE virals SET status = 'VIEWED' WHERE viral_id = '{}'".format(vir_id))
-        rows = session.execute("SELECT doc_page_id , doc_title , snippets , issimilar , doc_date_start, doc_date_stop FROM documents WHERE doc_page_id IN ({})".format(idsInString))
+        rows = session.execute("SELECT doc_page_id , doc_title , snippets , issimilar, isinterestingsimilar , doc_date_start, doc_date_stop FROM documents WHERE doc_page_id IN ({})".format(idsInString))
         print(vir_id)
         return render_template('viralPage.html', articles = rows, vir_id = vir_id, viralSnippet=viralSnippet, virTitle=virTitle)
 

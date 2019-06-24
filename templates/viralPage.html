@@ -31,18 +31,18 @@
                 </h4>
                 <p class="card-text snippetText" id = "{{ article.doc_page_id }}" style="height:70vh ; overflow:auto">{{ article.snippets[vir_id] }}</p>
                 <p class="card-text">{{ article.doc_date_start }}  -  {{ article.doc_date_stop }}</p>
-                <input class="form-check-input" type="checkbox" {% if article.issimilar["{{ vir_id }}"] %} checked {% endif %} " id="{{ article.doc_page_id }}", name="virals">
+                <input class="form-check-input" type="checkbox" {% if article.issimilar[ vir_id ] %} checked {% endif %}  id="{{ article.doc_page_id }}", name="virals">
                 <label class="form-check-label" for="{{ article.doc_page_id }}">
                   Similar text
                 </label>
                 <br>
-                <input class="form-check-input" type="checkbox" {% if article.issimilar["{{ vir_id }}" + "_INT"] %} checked {% endif %} " id="{{ article.doc_page_id }}", name="virals">
+                <input class="form-check-input" type="checkbox" {% if article.isinterestingsimilar[vir_id] %} checked {% endif %}  id="{{ article.doc_page_id + '_INT' }}", name="virals">
                 <label class="form-check-label" for="{{ article.doc_page_id }}">
                   Interesting text
                 </label><br>
-                <label id="ngramslabel">10-grams</label>
+                <label id="ngramslabel">3-grams</label>
                 <div class="slidecontainer">
-                  <input type="range" min="1" max="20" value="10" class="slider" id="myRange" oninput="calcNgrams(this.value)">
+                  <input type="range" min="1" max="20" value="3" class="slider" id="myRange" oninput="calcNgrams(this.value)">
                 </div>
               </div>
             </div>

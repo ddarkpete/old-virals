@@ -188,6 +188,8 @@ function calcNgrams(n) {
     });
 }
 
+calcNgrams(3);
+
 $('.mainSnippet').each(function () {
     var txt= $('#' + this.id).text();
     if(txt.length > 155)
