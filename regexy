@@ -1,0 +1,10 @@
+((niewiarygodn[aąe][jg]{0,1}o{0,1})|(niesamowit[aąe][jg]{0,1}o{0,1})|(szokuj[ąa]c[ae][jg]{0,1}o{0,1})|(straszn[aąe][jg]{0,1}o{0,1})|(intere{0,1}suj[aą]c[aąe][jg]{0,1}o{0,1})|(ciek[aąe]w[aąęey][jcg]{0,1}[ho]{0,1})) ((histor[iyj][aąęiej]a{0,1})|(opowi[ea][śs][tćc][ki]{0,1}[ai]{0,1}))
+
+((niewiarygodn[aąe][jg]{0,1}o{0,1})|(niesamowit[aąe][jg]{0,1}o{0,1})|(szokuj[ąa]c[ae][jg]{0,1}o{0,1})|(straszn[aąe][jg]{0,1}o{0,1})|(intere{0,1}suj[aą]c[aąe][jg]{0,1}o{0,1})|(ciek[aąe]w[aąęey][jcg]{0,1}[ho]{0,1})|(osobliw[ae][jg]{0,1}o{0,1})|(dziwn[ae][jg]{0,1}o{0,1})|(autentyczn[ae][jg]{0,1}o{0,1}|prawdziw[ae][jg]{0,1}o{0,1})) ((histor[iyj][aąęiej]a{0,1})|(opowi[ea][śs][tćc][ki]{0,1}[ai]{0,1}))
+
+
+((niewiarygodn[aąe][jg]{0,1}o{0,1})|(niesamowit[aąe][jg]{0,1}o{0,1})|(szokuj[ąa]c[ae][jg]{0,1}o{0,1})|(straszn[aąe][jg]{0,1}o{0,1})|(intere{0,1}suj[aą]c[aąe][jg]{0,1}o{0,1})|(ciek[aąe]w[aąęey][jcg]{0,1}[ho]{0,1})|(osobliw[ae][jg]{0,1}o{0,1})|(dziwn[ae][jg]{0,1}o{0,1})|(autentyczn[ae][jg]{0,1}o{0,1}|prawdziw[ae][jg]{0,1}o{0,1})) ((histor[iyj][aąęiej]a{0,1})|(opowi[ea][śs][tćc][ki]{0,1}[ai]{0,1})|(zdarz[ye][nłl][io][ae]{0,1})|(wydarz[ye][nłl][io][ae]{0,1}))
+
+
+
+ python3 searchRegularExpression.py CIEKHISTZDARZ '((niewiarygodn[aąe][jg]{0,1}o{0,1})|(niesamowit[aąe][jg]{0,1}o{0,1})|(szokuj[ąa]c[ae][jg]{0,1}o{0,1})|(straszn[aąe][jg]{0,1}o{0,1})|(intere{0,1}suj[aą]c[aąe][jg]{0,1}o{0,1})|(ciek[aąe]w[aąęey][jcg]{0,1}[ho]{0,1})|(osobliw[ae][jg]{0,1}o{0,1})|(dziwn[ae][jg]{0,1}o{0,1})|(autentyczn[ae][jg]{0,1}o{0,1}|prawdziw[ae][jg]{0,1}o{0,1})) ((histor[iyj][aąęiej]a{0,1})|(opowi[ea][śs][tćc][ki]{0,1}[ai]{0,1})|(zdarz[ye][nłl][io][ae]{0,1})|(wydarz[ye][nłl][io][ae]{0,1}))' && python3 findDuplicateShingling.py & python3 NGrams

@@ -38,7 +38,7 @@ for doc in docs:
     #print(doc.doc_id)
 '''
 
-tag = session.execute("SELECT documents FROM tags WHERE tagname = '{}'".format("JAKPODAJA"))
+tag = session.execute("SELECT documents FROM tags WHERE tagname = '{}'".format("CIEKHISTZDARZ"))
 for t in tag:
     for pagid in t.documents:
         docIDs.append(pagid)
