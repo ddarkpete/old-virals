@@ -19,7 +19,7 @@
       <!--<button type="button" class="btn">Submit</button>-->
 
       {% for viral in virals %}
-      {% if viral.snippet != None %}
+      {% if viral.snippet != None and viral.method_name != None  %}
       <div class="row">
         <div class="col-md-5">
           <h3 > " {{ viral.viral_id }} "</h3>

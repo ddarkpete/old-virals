@@ -113,6 +113,23 @@ for i in range(0,lenDocIDs - 1):
         shingle = "{} {} {}".format(words_page1[ind], words_page1[ind + 1], words_page1[ind + 2])
         shingle = strToIntHash(shingle)
         shinglesInPage1.add(shingle)
+
+    maxShingleId = 2 ** 32 - 1
+    nextPrime = 4294967311
+
+    coeffA = pickRandomCoefs(hashNum)
+    coeffB = pickRandomCoefs(hashNum)
+
+    signature_pag1 = []
+
+    for i in range(0, hashNum):
+        minHashCode = nextPrime + 1
+        for shingleID in shinglesInPage1:
+            hashCode = (coeffA[i] * shingleID + coeffB[i]) % nextPrime
+            if hashCode < minHashCode:
+                minHashCode = hashCode
+        signature_pag1.append(minHashCode)
+
     for j in range( i + 1, lenDocIDs):
         page2query = "SELECT doc_id , doc_page_id , page_text , doc_title from documents WHERE doc_page_id = '{}'".format(docIDs[j])
         page2 = session.execute(page2query)
@@ -167,23 +184,10 @@ for i in range(0,lenDocIDs - 1):
             #estJSim = [ 0 for x in range(elemCount)]
             #estJSim = JSim
 
-            maxShingleId = 2 ** 32 - 1
-            nextPrime = 4294967311
-
-            coeffA = pickRandomCoefs(hashNum)
-            coeffB = pickRandomCoefs(hashNum)
-
-            signature_pag1 = []
+            
             signature_pag2 = []
 
             for i in range(0, hashNum):
-                minHashCode = nextPrime + 1
-                for shingleID in shinglesInPage1:
-                    hashCode = (coeffA[i] * shingleID + coeffB[i]) % nextPrime
-                    if hashCode < minHashCode:
-                        minHashCode = hashCode
-                signature_pag1.append(minHashCode)
-                
                 minHashCode = nextPrime + 1
                 for shingleID in shinglesInPage2:
                     hashCode = (coeffA[i] * shingleID + coeffB[i]) % nextPrime

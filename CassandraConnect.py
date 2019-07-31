@@ -20,13 +20,13 @@ def mainPage(method):
         virals = session.execute("SELECT viral_id , status , snippet, method_name from virals")
         met = 1
     elif method == 'ngrams':
-        virals = session.execute("SELECT viral_id , status , snippet from virals where method_name = '4GRAMS' ALLOW FILTERING")
+        virals = session.execute("SELECT viral_id , status , snippet, method_name from virals where method_name = '4GRAMS' ALLOW FILTERING")
         met = 2   
     elif method == 'shingling':
-        virals = session.execute("SELECT viral_id , status , snippet from virals where method_name = 'SHINGLING' ALLOW FILTERING")
+        virals = session.execute("SELECT viral_id , status , snippet, method_name from virals where method_name = 'SHINGLING' ALLOW FILTERING")
         met = 3
     elif method == 'tfidf':
-        virals = session.execute("SELECT viral_id , status , snippet from virals where method_name = 'TFIDF' ALLOW FILTERING")
+        virals = session.execute("SELECT viral_id , status , snippet, method_name from virals where method_name = 'TFIDF' ALLOW FILTERING")
         met = 4
     else:
         return redirect('/all')
