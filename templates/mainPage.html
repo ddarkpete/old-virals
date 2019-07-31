@@ -24,6 +24,7 @@
         <div class="col-md-5">
           <h3 > " {{ viral.viral_id }} "</h3>
           <h4>Status: {{ viral.status }}</h4>
+          {% if met == 1 %} <h5> Method: {{viral.method_name}} </h5> {% endif %}
           <p class="mainSnippet" id="{{ viral.viral_id }}">{{ viral.snippet}}</p>
           <a class="btn btn-primary" href="/viral/{{ viral.viral_id }}">View viral</a>
         </div>

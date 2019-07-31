@@ -6,6 +6,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import math
 import random
+import time
+
 '''
 def cosine_similarity(vector1, vector2):
     dot_product = sum(p*q for p,q in zip(vector1, vector2))
@@ -29,6 +31,8 @@ def insertOrUpdateViral(p, p2):
         session.execute("INSERT INTO virals (viral_id,page_id, similar_pages, status, method_name, page_title)VALUES ('{}','{}',['{}'],'{}','{}','{}')".format(p.doc_page_id + '_TFIDF', p.doc_page_id, p2.doc_page_id,NEW_STATUS,METHOD_NAME, p.doc_title))
 
 
+start = time.time()
+
 tokenize = lambda doc: doc.lower().split(' ')
 sklearn_tfidf = TfidfVectorizer(norm='l2',min_df=0, use_idf=True, smooth_idf=False, sublinear_tf=True, tokenizer=tokenize)
 
@@ -49,7 +53,7 @@ for doc in docs:
     #print(doc.doc_id)
 '''
 
-tag = session.execute("SELECT documents FROM tags WHERE tagname = '{}'".format("CIEKHISTZDARZ"))
+tag = session.execute("SELECT documents FROM tags WHERE tagname = '{}'".format("WIESCI"))
 for t in tag:
     for pagid in t.documents:
         docIDs.append(pagid)
@@ -92,5 +96,8 @@ for i in range(0,lenDocIDs - 1):
                 print(x)
             '''
 
+end = time.time()
+
+print("{} seconds".format(end - start))
 
 

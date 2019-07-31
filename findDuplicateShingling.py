@@ -11,6 +11,7 @@ from heapq import heappop, heappush
 from cassandra.cluster import Cluster
 from nltk import ngrams
 import random
+import time
 
 cluster = Cluster() 
 session = cluster.connect('oldviralskeyspace')
@@ -80,6 +81,7 @@ def insertOrUpdateViral(p, p2):
         session.execute("INSERT INTO virals (viral_id,page_id, similar_pages, status, method_name, page_title)VALUES ('{}','{}',['{}'],'{}','{}','{}')".format(p.doc_page_id, p.doc_page_id, p2.doc_page_id,NEW_STATUS,METHOD_NAME, p.doc_title))
 
 
+start = time.time()
 
 hashNum = 10
 fileName = "1934_preprocesed.tsv"
@@ -208,7 +210,8 @@ for i in range(0,lenDocIDs - 1):
             else:
                 underThrsh += 1
 
- 
+end = time.time()
+print("{} seconds".format(end - start))
 
         
 

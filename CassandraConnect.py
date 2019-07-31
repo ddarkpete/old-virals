@@ -17,7 +17,7 @@ def redirToAll():
 @app.route('/<method>')
 def mainPage(method):
     if method == 'all' or method == '':
-        virals = session.execute("SELECT viral_id , status , snippet from virals")
+        virals = session.execute("SELECT viral_id , status , snippet, method_name from virals")
         met = 1
     elif method == 'ngrams':
         virals = session.execute("SELECT viral_id , status , snippet from virals where method_name = '4GRAMS' ALLOW FILTERING")
